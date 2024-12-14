@@ -17,6 +17,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(RouteCollector $r) {
     $r->addRoute('GET', '/admin/', 'Controllers\\AdminHomeController@index');
 
     $r->addRoute('GET', '/admin/new-facility', 'Controllers\\AdminHomeController@new_facility');
+    $r->addRoute('POST', '/admin/new-facility', 'Controllers\\AdminHomeController@save_new_facility');
     $r->addRoute('GET', '/admin/manage-facility', 'Controllers\\AdminHomeController@manage_facility');
 
     $r->addRoute('GET', '/admin/new-admin', 'Controllers\\AdminHomeController@new_admin');
@@ -35,6 +36,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(RouteCollector $r) {
     $r->addRoute('GET', '/admin/new-session', 'Controllers\\AdminHomeController@new_session');
     $r->addRoute('POST', '/admin/new-session', 'Controllers\\AdminHomeController@do_new_session');
     $r->addRoute('GET', '/admin/manage-session', 'Controllers\\AdminHomeController@manage_session');
+    $r->addRoute('GET', '/admin/new-session/{patient_ref}', 'Controllers\\AdminHomeController@new_session_form');
+    $r->addRoute('POST', '/admin/new-session/{patient_ref}', 'Controllers\\AdminHomeController@log_new_session');
+
 
     $r->addRoute('GET', '/admin/patient-profile/{patient_ref}', 'Controllers\\AdminHomeController@patient_profile');
 

@@ -38,15 +38,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Patient Session</button>
-                            </li>
-
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Finance</button>
-                            </li>
-
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Pharmacy</button>
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#patient-session">Patient Session</button>
                             </li>
 
                         </ul>
@@ -96,20 +88,33 @@
 
                             </div>
 
-                            <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                            <div class="tab-pane fade profile-edit pt-3" id="patient-session">
+                                <p>List of the patients sessiosn are displayed below</p>
 
+                                <table class="table table-borderless">
+                                    <thead>
+                                    <tr>
 
+                                        <th scope="col">#</th>
+                                        <th scope="col">Patient Name</th>
+                                        <th scope="col">Vitals</th>
+                                        <th scope="col">Date Opened</th>
+                                        <th scope="col">status</th>
 
-                            </div>
-
-                            <div class="tab-pane fade pt-3" id="profile-settings">
-
-
-
-                            </div>
-
-                            <div class="tab-pane fade pt-3" id="profile-change-password">
-
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $s_n = 1; if(isset($patient_session) && !empty($patient_session)) { foreach ($patient_session as $row) { ?>
+                                        <tr>
+                                            <th scope="row"><?= $s_n++; ?></th>
+                                            <td><?= $row->patient->last_name . ' ' . $row->patient->first_name; ?></td>
+                                            <td><?= $row->vitals_taken; ?></td>
+                                            <td><?= Func::datetime_to_text($row->created_at); ?></td>
+                                            <td><?= $row->status; ?></td>
+                                        </tr>
+                                    <?php } } ?>
+                                    </tbody>
+                                </table>
 
                             </div>
 

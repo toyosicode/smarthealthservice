@@ -163,4 +163,23 @@ class Func
 
         return $link;
     }
+
+    static function sanitizeInput(&$data): void
+    {
+        // Check if $data is an array
+        if(is_array($data)) {
+            foreach ($data as $key => $value) {
+                // If $value is an array, recursively call sanitizeInput()
+                if(is_array($value)) {
+                    Func::sanitizeInput($data[$key]);
+                } else {
+                    // Sanitize individual values
+                    $data[$key] = htmlspecialchars(strip_tags(trim($value)));
+                }
+            }
+        } else {
+            // Sanitize single value
+            $data = htmlspecialchars(strip_tags(trim($data)));
+        }
+    }
 }

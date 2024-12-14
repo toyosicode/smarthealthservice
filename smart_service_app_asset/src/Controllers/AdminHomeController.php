@@ -41,6 +41,35 @@ class AdminHomeController extends AdminBaseController
         $this->loadView('admin/new-facility', $view_data);
     }
 
+    public function save_new_facility()
+    {
+        $this->check_login();
+
+        foreach ($_REQUEST as $key => &$value) {
+            Func::sanitizeInput($value);
+        }
+
+        extract($_REQUEST);
+
+        // Map the NIN info to the Patient model fields
+        $add_new_facility = Facility::insert([
+            'name' => $facility_name,
+            'address' => $facility_address,
+            'phone_number' => $facility_phone,
+            'director_name' => $director_name,
+            'director_phone' => $director_phone,
+            'director_email' => $director_email
+        ]);
+
+        if($add_new_facility) {
+            Func::putFlash("success", "Facility registered successfully.");
+            Func::redirect_back();
+        } else {
+            Func::putFlash("error", "An error occurred, the facility was not registered.");
+            Func::redirect_back();
+        }
+    }
+
     public function manage_facility()
     {
         $this->check_login();
@@ -166,13 +195,93 @@ class AdminHomeController extends AdminBaseController
         $this->loadView('admin/new-session', $view_data);
     }
 
+    public function do_new_session()
+    {
+        $this->check_login();
+
+        foreach ($_REQUEST as $key => &$value) {
+            Func::sanitizeInput($value);
+        }
+
+        extract($_REQUEST);
+
+        $query_result = Patient::where('nin', 'like', $search_query)
+            ->orWhere('first_name', 'like', $search_query)
+            ->orWhere('last_name', 'like', $search_query)
+            ->orWhere('email', 'like', $search_query)
+            ->orWhere('phone_number', 'like', $search_query)
+            ->get();
+
+        $query_result = [
+            'query_result' => $query_result,
+            'total' => $query_result->count(),
+        ];
+
+        $this->loadView('admin/new-session', $query_result);
+    }
+
     public function manage_session()
+    {
+        $this->check_login();
+
+        $this->manage_items(PatientSession::class, 'admin/manage-session');
+    }
+
+    public function new_session_form($param)
     {
         $this->check_login();
 
         $view_data = [];
 
-        $this->loadView('admin/manage-session', $view_data);
+        $patient_id = Func::dec_enc('decrypt', $param['patient_ref']);
+
+        if(Patient::where('patient_id', $patient_id)->exists()) {
+
+            $view_data = [
+                'patient_details' => Patient::where('patient_id', $patient_id)->first()
+            ];
+
+            $this->loadView('admin/new-session-form', $view_data);
+        } else {
+            Func::putFlash("error", "An error occurred, please try again.");
+            Func::redirect_back();
+        }
+
+    }
+
+    public function log_new_session($param)
+    {
+        $this->check_login();
+
+        foreach ($_REQUEST as $key => &$value) {
+            Func::sanitizeInput($value);
+        }
+
+        extract($_REQUEST);
+
+        $patient_id = Func::dec_enc('decrypt', $param['patient_ref']);
+
+        if(Patient::where('patient_id', $patient_id)->exists()) {
+
+            $add_new_session = PatientSession::insert([
+                'patient_id' => $patient_id,
+                'facility_id' => Patient::where('patient_id', $patient_id)->first()->facility->facility_id,
+                'vitals_taken' => $patient_vitals
+            ]);
+
+            if($add_new_session) {
+                Func::putFlash("success", "The session has been created.");
+                Func::redirect_to(Func::host() . '/admin/manage-session');
+            } else {
+                Func::putFlash("error", "An error occurred, the session was not created.");
+                Func::redirect_to(Func::host() . '/admin/new-session');
+            }
+
+        } else {
+            Func::putFlash("error", "An error occurred, please try again.");
+            Func::redirect_back();
+        }
+
     }
 
     public function patient_profile($param)
@@ -186,7 +295,8 @@ class AdminHomeController extends AdminBaseController
         $patient_id = Func::dec_enc('decrypt', $param['patient_ref']);
 
         $view_data = [
-            'patient_details' => Patient::where('patient_id', $patient_id)->first()
+            'patient_details' => Patient::where('patient_id', $patient_id)->first(),
+            'patient_session' => PatientSession::where('patient_id', $patient_id)->get()
         ];
 
         $this->loadView( 'admin/patient-profile', $view_data );

@@ -106,9 +106,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach($latest_sessions AS $session) { ?>
+                            <?php $sn=1; foreach($latest_sessions AS $session) { ?>
                             <tr>
-                                <th scope="row"><?php ?></th>
+                                <th scope="row"><?= $sn++; ?></th>
                                 <td><?= $session->patient->last_name . ' ' . $session->patient->first_name; ?></td>
                                 <td><?= Func::datetime_to_text($session->created_at); ?></td>
                                 <td>

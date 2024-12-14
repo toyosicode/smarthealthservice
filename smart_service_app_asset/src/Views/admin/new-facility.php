@@ -9,7 +9,9 @@
     <meta content="" name="description">
     <meta content="" name="keywords">
 
-    <?php require_once "layout/head_meta.php"; ?>
+    <?php use Helpers\Func;
+
+    require_once "layout/head_meta.php"; ?>
 </head>
 
 <body>
@@ -30,48 +32,39 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Add a new facility to the Healthcare Smart platform</h5>
+                        <h5 class="card-title">Add a new facility to the platform</h5>
 
-                        <form class="row g-3">
+                        <form class="row g-3" method="post" action="<?= Func::host(); ?>/admin/new-facility">
                             <div class="col-md-12">
-                                <label for="inputName5" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="inputName5">
+                                <label for="inputFacilityName" class="form-label">Facility Name</label>
+                                <input name="facility_name" type="text" class="form-control" id="inputFacilityName">
+                            </div>
+                            <div class="col-md-12">
+                                <label for="inputFacilityAddress" class="form-label">Facility Address</label>
+                                <textarea name="facility_address" class="form-control" id="inputFacilityAddress" rows="4"></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="inputFacilityPhone" class="form-label">Facility Phone Number</label>
+                                <input name="facility_phone" type="text" class="form-control" id="inputFacilityPhone">
                             </div>
                             <div class="col-md-6">
-                                <label for="inputName5" class="form-label">Phone Number</label>
-                                <input type="text" class="form-control" id="inputName5">
+                                <label for="inputDirectorName" class="form-label">Director Name</label>
+                                <input name="director_name" type="text" class="form-control" id="inputDirectorName">
                             </div>
                             <div class="col-md-6">
-                                <label for="inputName5" class="form-label">Director Name</label>
-                                <input type="text" class="form-control" id="inputName5">
+                                <label for="inputDirectorPhone" class="form-label">Director Phone Number</label>
+                                <input name="director_phone" type="text" class="form-control" id="inputDirectorPhone">
                             </div>
-                            <div class="col-md-6">
-                                <label for="inputEmail5" class="form-label">Director Email</label>
-                                <input type="email" class="form-control" id="inputEmail5">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="inputPhone" class="form-label">Director Phone</label>
-                                <input type="text" class="form-control" id="">
-                            </div>
-                            <div class="col-12">
-                                <label for="inputAddress5" class="form-label">Address</label>
-                                <input type="text" class="form-control" id="inputAddres5s" placeholder="1234 Main St">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="inputCity" class="form-label">City</label>
-                                <input type="text" class="form-control" id="inputCity">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="inputState" class="form-label">State</label>
-                                <select id="inputState" class="form-select">
-                                    <option selected>Choose...</option>
-                                    <option>...</option>
-                                </select>
+                            <div class="col-md-12">
+                                <label for="inputDirectorEmail" class="form-label">Director Email Address</label>
+                                <input name="director_email" type="email" class="form-control" id="inputDirectorEmail">
                             </div>
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Add Facility</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
+
+
 
                     </div>
                 </div>
