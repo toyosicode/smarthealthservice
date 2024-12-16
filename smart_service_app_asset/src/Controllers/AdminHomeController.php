@@ -6,6 +6,7 @@ use Helpers\Func;
 use Helpers\Mailer;
 use Models\Admin;
 use Models\AdminPrivilege;
+use Models\Appointments;
 use Models\Department;
 use Models\Facility;
 use Models\Patient;
@@ -296,7 +297,8 @@ class AdminHomeController extends AdminBaseController
 
         $view_data = [
             'patient_details' => Patient::where('patient_id', $patient_id)->first(),
-            'patient_session' => PatientSession::where('patient_id', $patient_id)->get()
+            'patient_session' => PatientSession::where('patient_id', $patient_id)->get(),
+            'patient_appointment' => Appointments::where('patient_session_id', $patient_id)->get()
         ];
 
         $this->loadView( 'admin/patient-profile', $view_data );
@@ -498,6 +500,44 @@ MAIL;
             }
 
             Func::redirect_to(Func::host() . '/admin/manage-patient');
+        } else {
+            Func::putFlash("danger", "Patient information cannot be found.");
+            Func::redirect_back();
+        }
+    }
+
+    public function do_appointment($param)
+    {
+        $this->check_login();
+
+        if(!isset($param['patient_ref'])) {
+            Func::redirect_to(Func::host(). '/admin/');
+        }
+
+        $patient_id = Func::dec_enc('decrypt', $param['patient_ref']);
+
+        if (Patient::where('patient_id', $patient_id)->exists()) {
+
+            foreach ($_REQUEST as $key => &$value) {
+                Func::sanitizeInput($value);
+            }
+
+            extract($_REQUEST);
+
+            // Map the NIN info to the Patient model fields
+            $add_new_appointment = Appointments::insert([
+                'patient_session_id' => $patient_id,
+                'appointment_time' => $appointment_date
+            ]);
+
+            if($add_new_appointment) {
+                Func::putFlash("success", "Appointment scheduled successfully.");
+                Func::redirect_back();
+            } else {
+                Func::putFlash("error", "An error occurred, the appointment was not scheduled.");
+                Func::redirect_back();
+            }
+
         } else {
             Func::putFlash("danger", "Patient information cannot be found.");
             Func::redirect_back();

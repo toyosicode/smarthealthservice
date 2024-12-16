@@ -41,6 +41,10 @@
                                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#patient-session">Patient Session</button>
                             </li>
 
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#patient-appointments">Appointments</button>
+                            </li>
+
                         </ul>
                         <div class="tab-content pt-2">
 
@@ -113,6 +117,64 @@
                                             <td><?= $row->status; ?></td>
                                         </tr>
                                     <?php } } ?>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                            <div class="tab-pane fade profile-edit pt-3" id="patient-appointments">
+                                <p>See patient appointments below. You can also add new appointments</p>
+
+                                <form method="post" action="<?= Func::host(); ?>/admin/appointment/<?= Func::dec_enc('encrypt', $patient_details->patient_id); ?>">
+
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+                                        Book Appointment
+                                    </button>
+
+                                    <!-- Confirmation Modal -->
+                                    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="confirmationModalLabel">Book Appointment</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Choose an appointment date for patient</p>
+                                                    <p><input type="date" name="appointment_date" class="form-control" /></p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">Save Appointment</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                                <table class="table table-borderless">
+                                    <thead>
+                                    <tr>
+
+                                        <th scope="col">#</th>
+                                        <th scope="col">Appointment Date</th>
+                                        <th scope="col">Status</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $s_n = 1; if(isset($patient_appointment) && !empty($patient_appointment)) { foreach ($patient_appointment as $row) { ?>
+                                        <tr>
+                                            <th scope="row"><?= $s_n++; ?></th>
+                                            <td><?= Func::date_to_text($row->appointment_time); ?></td>
+                                            <td><?= $row->status; ?></td>
+                                        </tr>
+                                    <?php } } else { ?>
+                                        <tr>
+                                            <td colspan="3">No appointments.</td>
+                                        </tr>
+                                    <?php } ?>
                                     </tbody>
                                 </table>
 
