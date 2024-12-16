@@ -451,4 +451,57 @@ MAIL;
 
     }
 
+    public function delete_profile($param)
+    {
+        $this->check_login();
+
+        if(!isset($param['patient_ref'])) {
+            Func::redirect_to(Func::host(). '/admin/');
+        }
+
+        $patient_id = Func::dec_enc('decrypt', $param['patient_ref']);
+
+        if(Patient::where('patient_id', $patient_id)->exists()) {
+
+            $view_data = [
+                'patient_details' => Patient::where('patient_id', $patient_id)->first(),
+            ];
+
+            $this->loadView( 'admin/delete-profile', $view_data );
+
+        } else {
+            Func::putFlash("danger", "Patient information cannot be found.");
+            Func::redirect_back();
+        }
+    }
+
+    public function do_delete_profile($param)
+    {
+        $this->check_login();
+
+        if(!isset($param['patient_ref'])) {
+            Func::redirect_to(Func::host(). '/admin/');
+        }
+
+        $patient_id = Func::dec_enc('decrypt', $param['patient_ref']);
+
+        if (Patient::where('patient_id', $patient_id)->exists()) {
+
+            $patient = Patient::where('patient_id', $patient_id)->first();
+
+            $patient->session()->delete();
+
+            if ($patient->delete()) {
+                Func::putFlash("success", "Patient and related information deleted successfully.");
+            } else {
+                Func::putFlash("danger", "Failed to delete the patient. Please try again.");
+            }
+
+            Func::redirect_to(Func::host() . '/admin/manage-patient');
+        } else {
+            Func::putFlash("danger", "Patient information cannot be found.");
+            Func::redirect_back();
+        }
+    }
+
 }

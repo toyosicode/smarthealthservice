@@ -3,6 +3,7 @@ namespace Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Patient extends Eloquent
 {
@@ -32,5 +33,9 @@ class Patient extends Eloquent
         return $this->belongsTo(Facility::class, 'enrolment_facility_id', 'facility_id');
     }
 
+    public function session(): HasMany
+    {
+        return $this->hasMany(PatientSession::class, 'patient_id', 'patient_id');
+    }
 
 }

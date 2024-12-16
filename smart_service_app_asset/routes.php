@@ -41,6 +41,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(RouteCollector $r) {
 
 
     $r->addRoute('GET', '/admin/patient-profile/{patient_ref}', 'Controllers\\AdminHomeController@patient_profile');
+    $r->addRoute('GET', '/admin/delete-profile/{patient_ref}', 'Controllers\\AdminHomeController@delete_profile');
+    $r->addRoute('POST', '/admin/delete-profile/{patient_ref}', 'Controllers\\AdminHomeController@do_delete_profile');
 
 });
 

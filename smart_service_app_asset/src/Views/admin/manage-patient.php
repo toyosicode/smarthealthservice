@@ -59,6 +59,7 @@
                                         <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                             <li><a class="dropdown-item" href="<?= Func::host() . '/admin/'; ?>patient-profile/<?= Func::dec_enc('encrypt', $row->patient_id); ?>">Patient Profile</a></li>
+                                            <li><a class="dropdown-item" href="<?= Func::host() . '/admin/'; ?>delete-profile/<?= Func::dec_enc('encrypt', $row->patient_id); ?>">Delete Profile</a></li>
                                         </ul>
                                     </td>
                                 </tr>
